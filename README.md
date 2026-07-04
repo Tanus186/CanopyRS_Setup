@@ -40,11 +40,11 @@ D:\YourFolderName\
  │    ├── 1_detector\              # Step 2: DINO finds bounding boxes
  │    ├── 2_aggregator\            # Step 3: Merges duplicate boxes
  │    ├── 3_segmenter\             # Step 4: SAM3 generates precise polygons
- │    ├──** 4_aggregator\            # Step 5: Final aggregated raw map polygons (.gpkg)** 
+ │    ├── 4_aggregator\            # Step 5: Final aggregated raw map polygons (.gpkg). THIS IS THE MAIN GPKG FILE THAT WE                                                WILL USE
  │    ├── 5_tilerizer\             # Step 6: Individual cutouts of each crown
  │    └── crowns_with_species.gpkg # THE FINAL RESULT: Map with predicted species attached!
  │
- ├── images\                       # Folder to save output charts and graphs
+ ├── images\                       # Species detection graphs 
  │    ├── chart_7_5_species_distribution.png
  │    └── chart_7_6_per_crown.png
  │
@@ -73,6 +73,10 @@ D:\YourFolderName\
 ## Step 1: Network Check and Cloning the Repository
 
 First, open your Command Prompt (`cmd`) and navigate to your main drive (e.g., `D:`). We need to check the network proxy settings and download the CanopyRS repository.
+
+```cmd
+Run the commands that are inside this 
+```
 
 **1. unset your user-level proxy:**
 
@@ -122,7 +126,8 @@ dir "%USERPROFILE%\Miniconda3\Scripts\conda.exe"
 dir "%USERPROFILE%\Anaconda3\Scripts\conda.exe"
 ```
 
-*Explanation: These commands search the computer to find the exact location of the Anaconda/Miniconda installation.*
+*Explanation: These commands search the computer to find the exact location of the Anaconda/Miniconda installation and give its exact path in the output
+for eg C:\Users\admin\Anaconda3\Scripts\activate.bat*
 
 **2. Activate the base Conda environment:**
 *(Note: Adjust this path if step 1 showed Anaconda is installed elsewhere)*
@@ -161,7 +166,7 @@ conda activate D:\YourFolderName\envs\canopyrs
 
 #### **Important**
 
- You must do this every time you open a new terminal.*
+ You must do this every time you open a new terminal to activate our environment .*
 
 ```cmd
 call C:\Users\admin\Anaconda3\Scripts\activate.bat
@@ -250,7 +255,8 @@ curl -L -o vs_BuildTools.exe https://aka.ms/vs/17/release/vs_BuildTools.exe
 vs_BuildTools.exe --quiet --wait --norestart --nocache --installPath "D:\YourFolderName\BuildTools" --add Microsoft.VisualStudio.Workload.VCTools --includeRecommended
 ```
 
-*Explanation: Runs the installer in the background without pop-ups and installs it directly into `D:\YourFolderName\BuildTools`. This is a ~4GB download and may take a few minutes.*
+*Explanation: Runs the installer in the background without pop-ups and installs it directly into `D:\YourFolderName\BuildTools`. This is a ~4GB download and may take a few minutes.
+There will be no output here*
 
 **4. Check if the installer is still running:**
 
@@ -258,7 +264,7 @@ vs_BuildTools.exe --quiet --wait --norestart --nocache --installPath "D:\YourFol
 tasklist | findstr /i "vs_installer setup BuildTools"
 ```
 
-*Explanation: If this returns text, the installation is still processing. Wait until it finishes.*
+*Explanation: If this returns some text, the installation is still processing. Wait until it finishes.*
 
 **5. Verify the folder exists:**
 
@@ -266,7 +272,8 @@ tasklist | findstr /i "vs_installer setup BuildTools"
 dir "D:\YourFolderName\BuildTools" 2>nul
 ```
 
-*Explanation: Checks if the folder was successfully created. (`2>nul` just hides error messages if it doesn't exist yet).*
+*Explanation: Checks if the folder was successfully created. (`2>nul` just hides error messages if it doesn't exist yet).
+Or you can check directly in File Explorer*
 
 **6. Re-run PyTorch install (to ensure paths are bound):**
 
