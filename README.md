@@ -508,6 +508,8 @@ cd \YourFolderName
 
 *(Note: Whenever you close and reopen the terminal, you must always run `call C:\Users\admin\Anaconda3\Scripts\activate.bat` and `conda activate D:\YourFolderName\envs\canopyrs` before doing anything).*
 
+*(Note: Adding 5th step is optional only needed when you need to do species detection)*
+
 **1. Update the Preset File (Adding the 5th Step):**
 Open your preset file located at YourFolderName/CanopyRS/canopyrs/config/pipelines (`preset_seg_multi_NQOS_selvamask_SAM3_FT_quality.yaml`) in a text editor. Scroll to the very end and paste the following block to add the "tilerizer" step:
 
@@ -523,8 +525,11 @@ Save and close the file.
 
 **2. Run the main automation command:**
 Run the pipeline on the academic area image. 
-*(File Size: `[File Size in GB]`)*
-*(Expected Time to Finish: `[Time Taken for Automation]`)*
+*(File Size: `3.4 GB`)*
+*(Expected Time to Finish: `15-20 min`)
+*Expected time depends on the size of the tif file *
+
+*
 
 ```cmd
 python D:\YourFolderName\CanopyRS\infer.py -c preset_seg_multi_NQOS_selvamask_SAM3_FT_quality.yaml -i D:\YourFolderName\CanopyRS\assets\[Academic Area Placeholder].tif -o D:\YourFolderName\p1
@@ -593,45 +598,6 @@ Watch the terminal. If the process is successful, you will see some processing d
 
 ---
 
-### Appendix: What Does the Species Detection Script Actually Do?
-
-If you are curious about what happens in the background when you run the `Species_detection_final_results_download.py` script, here is a plain-English breakdown of the automated steps (Steps 7.1 through 8):
-
-**7.1 Download model from HuggingFace**
-
-* *Action:* Gets the species-recognition AI model onto the machine.
-* *Details:* This step downloads a pre-trained AI model called DINOv3. This specific model was fine-tuned to recognize 84 tropical tree species from aerial photos. 
-
-**7.2 Load species names + build model**
-
-* *Action:* Loads the model into memory and activates it on the GPU.
-* *Details:* The code builds the neural network structure in Python, loads the trained weights (the data the model learned during training), and moves everything to the GPU so it processes quickly. After this step, the model is ready to analyze images.
-
-**7.3 Load crown tiles + compute masks**
-
-* *Action:* Finds all the crown image tiles and masks out the background of each one.
-* *Details:* The script locates all the tiny crown image files (the `.tif` files generated during the `tilerizer` step). It uses the exact polygon shape of each crown to build a binary mask—a black-and-white layer indicating exactly which pixels are inside the tree crown and which are outside. Blacking out the background prevents the model from getting confused by parts of neighboring trees. 
-
-**7.4 Run species inference on GPU**
-
-* *Action:* Runs every masked crown tile through the model to get species predictions.
-* *Details:* The model looks at every single masked crown tile and makes a prediction. It provides the top 5 guesses with confidence percentages for every individual tree crown. It processes these in batches of 32 at a time for maximum GPU efficiency. 
-
-**7.5 Species distribution bar chart**
-
-* *Action:* Counts predictions across the whole image and plots a species distribution chart.
-* *Details:* The script reviews the predictions for every individual tree and counts up all the #1 predictions. It then generates a horizontal bar chart showing the top 10 most common predicted species across the entire mapping area, giving you a broad overview of the forest's composition.
-
-**7.6 Per-crown top-5 predictions**
-
-* *Action:* Shows detailed images and top-5 charts for individual crowns.
-* *Details:* The script selects a few individual trees and generates a detailed visual for each. The left side shows the actual masked photo of that crown, and the right side displays a bar chart of its top-5 species predictions. This allows you to visually check if the model's prediction makes sense based on the image.
-
-**Step 8: Save .gpkg with species columns**
-
-* *Action:* Attaches all predictions to the map polygons and saves the final file.
-* *Details:* Until this point, the species predictions only exist temporarily in the computer's memory. This final step opens the polygon map file, looks up the species prediction for each shape, and adds four new data columns: `predicted_species`, `species_confidence`, `top5_species`, and `top5_confidence`. It saves everything as a new file called `crowns_with_species.gpkg`. You can open this file in GIS software (like QGIS) to view your map, where each tree crown polygon is colored by its predicted species.
-
 ## Step 13: Checking the accuracy of the model compared to the manual .gpkg file
 
 ```cmd
@@ -644,6 +610,29 @@ This will give you an excel sheet as a output
 
 <img width="269" height="220" alt="image" src="https://github.com/user-attachments/assets/d20bfe38-0d8d-4924-946b-e576668b2e3b" />
 
+---
+
+# Suggestions for Future Work
+
+These are notes from my attempts to improve accuracy.
+
+1. Fine-tuning DINO Swin-L - Training got stuck at 100% memory usage. Would need a 24 GB+ GPU.
+
+2. Fine-tuning DINO ResNet-50 (default learning rate 0.0001) - Training completed, but very few trees detected. Learning rate too high — the model lost its pre-trained knowledge.
+
+3. Fine-tuning DINO ResNet-50 (reduced learning rate 0.00001) -  Metrics stabilised, but the model detected only 450 of 1,850 real trees on the full image.
+
+Official CanopyRS NMS grid search tool. Requires the dataset to be registered in CanopyRS's internal dataset registry. 
+
+Suggestions to try
+
+1. The detector is the weak part of the pipeline. A mean IoU of 73% shows that when the detector finds a tree, SAM 3 draws the polygon shape well, so the segmentor is good.
+
+2. Try SAM 2 as an alternative segmenter. We used SAM 3. SAM 2 may give slightly different results on this data as this was used in Google Colab and results were better there.
+
+3. Targeting fine-tuning on missed trees. Instead of fine-tuning on all 1,850 annotations, identify the trees the current model misses (false negatives from accuracy_score.py output), extract just those from the manual GeoPackage, and fine-tune on that focused subset. This might work.
+
+4. Read the official CanopyRS docs properly.
 
 ***
 
