@@ -2,7 +2,7 @@
 
 **Official CanopyRS GitHub Repository:** [https://github.com/hugobaudchon/CanopyRS](https://github.com/hugobaudchon/CanopyRS)
 
-Welcome! This documentation will guide you step by step through installing and configuring CanopyRS on a Windows High-Performance Computing (HPC) machine. You can run these commands in the Windows Command Prompt (`cmd`). 
+This documentation will guide you step by step through installing and configuring CanopyRS on a Windows High-Performance Computing (HPC) machine. You can run these commands in the Windows Command Prompt (`cmd`). 
 
 ## Project Directory Structure
 
