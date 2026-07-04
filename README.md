@@ -632,13 +632,18 @@ If you are curious about what happens in the background when you run the `Specie
 * *Action:* Attaches all predictions to the map polygons and saves the final file.
 * *Details:* Until this point, the species predictions only exist temporarily in the computer's memory. This final step opens the polygon map file, looks up the species prediction for each shape, and adds four new data columns: `predicted_species`, `species_confidence`, `top5_species`, and `top5_confidence`. It saves everything as a new file called `crowns_with_species.gpkg`. You can open this file in GIS software (like QGIS) to view your map, where each tree crown polygon is colored by its predicted species.
 
-## Step 13: Checking accuracy of the model compared the manual .gpkg file
+## Step 13: Checking the accuracy of the model compared to the manual .gpkg file
 
 ```cmd
-# Make sure the CRS of both .gpkg and .tif file is same.
+# Make sure the CRS of both the .gpkg and .tif files is the same.
 
 python accuracy_score.py --predicted "D:\Tanushree\powai_files\academic_area_clip_gr0p07_infer.gpkg" --ground_truth "D:\Tanushree\powai_files\Tree_canopy_academic_area.gpkg" --output "D:\Tanushree\powai_files\accuracy_before_refinement.csv" 
 ```
+We are comparing two gpkgs: first one is generated  by canoprs, and we are comparing it to the second one that we made manually.
+This will give you an excel sheet as a output
+
+<img width="269" height="220" alt="image" src="https://github.com/user-attachments/assets/d20bfe38-0d8d-4924-946b-e576668b2e3b" />
+
 
 ***
 
