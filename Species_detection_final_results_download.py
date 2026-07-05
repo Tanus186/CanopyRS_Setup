@@ -1,28 +1,5 @@
 # =============================================================================
-# STEPS 7.1 → 7.2 → 7.3 → 7.4 → 7.5 → 7.6 → 8  —  ALL IN ONE
-# =============================================================================
-# WHY THIS FILE EXISTS:
-#   The individual step files (step_7_1, step_7_3, etc.) are for READING and
-#   UNDERSTANDING what each Colab cell does. But you can't run them separately
-#   from CMD and share variables between them (backbone, results, sample_df etc.
-#   would disappear between runs).
-#
-#   This file runs everything in one go, in the correct order.
-#   It is identical code to the individual step files — just combined.
-#
-# HOW TO RUN:
-#   (canopyrs) D:\Tanushree> python step_7_and_8_ALL_IN_ONE.py
-#
-# BEFORE RUNNING:
-#   Make sure D:\Tanushree\bci-crown-model exists with these 4 items inside:
-#     - dinov3-14-0.000.ckpt
-#     - class_names_ordered.json
-#     - dinov3_vitb16_pretrain_lvd1689m
-#     - dinov3_repo\   (folder)
-#   Download these on your laptop and copy to HPC (see step_7_1 comments).
-#
-# WHAT GETS SAVED:
-#   D:\Tanushree\p1\crowns_with_species.gpkg   <- final result, open in QGIS
+# STEPS 1.1 → 1.2 → 1.3 → 1.4 → 1.5 → 1.6 → 1.7
 # =============================================================================
 
 # ── Imports ───────────────────────────────────────────────────────────────────
@@ -71,8 +48,7 @@ MODEL_DIR   = r"D:\Tanushree\bci-crown-model"    # where you copied the HF model
 
 # =============================================================================
 # ─────────────────────────────────────────────────────────────────────────────
-# STEP 7.1 — Load the Classification Model
-# Colab: "## 7.1 Download the Classification Model"
+# STEP 1.1 — Load the Classification Model
 # ─────────────────────────────────────────────────────────────────────────────
 # =============================================================================
 print("=" * 60)
@@ -109,8 +85,7 @@ if DEVICE == "cuda":
     print(f"GPU:    {torch.cuda.get_device_name(0)}")
 
 # =============================================================================
-# STEP 7.2 — Load Species Names & Build the Model
-# Colab: "## 7.2 Load Species Names & Build the Model"
+# STEP 1.2 — Load Species Names & Build the Model
 # =============================================================================
 print("\n" + "=" * 60)
 print("STEP 7.2 — Loading species names and building model")
@@ -157,8 +132,7 @@ n_params = (
 print(f"Model loaded — {n_params:.1f}M parameters on {DEVICE}")
 
 # =============================================================================
-# STEP 7.3 — Load Crown Tiles from the Pipeline Output
-# Colab: "## 7.3 Load Crown Tiles from the Pipeline Output"
+# STEP 1.3 — Load Crown Tiles from the Pipeline Output
 # =============================================================================
 print("\n" + "=" * 60)
 print("STEP 7.3 — Loading crown tiles and computing masks")
@@ -257,8 +231,7 @@ plt.tight_layout()
 plt.show()
 
 # =============================================================================
-# STEP 7.4 — Run Species Inference
-# Colab: "## 7.4 Run Species Inference"
+# STEP 1.4 — Run Species Inference
 # =============================================================================
 print("\n" + "=" * 60)
 print("STEP 7.4 — Running species inference")
@@ -316,11 +289,10 @@ if len(results) > 10:
     print(f"  ... and {len(results) - 10} more")
 
 # =============================================================================
-# STEP 7.5 — Species Distribution Chart
-# Colab: "## 7.5 Species Distribution"
+# STEP 1.5 — Species Distribution Chart
 # =============================================================================
 print("\n" + "=" * 60)
-print("STEP 7.5 — Species distribution chart")
+print("STEP 1.5 — Species distribution chart")
 print("=" * 60)
 
 species_counts = Counter(r['best_label'] for r in results)
@@ -348,8 +320,7 @@ plt.tight_layout()
 plt.show()
 
 # =============================================================================
-# STEP 7.6 — Per-Crown Predictions
-# Colab: "## 7.6 Per-Crown Predictions"
+# STEP 1.6 — Per-Crown Predictions
 # =============================================================================
 print("\n" + "=" * 60)
 print("STEP 7.6 — Per-crown prediction visualization")
@@ -388,9 +359,7 @@ plt.tight_layout()
 plt.show()
 
 # =============================================================================
-# STEP 8 — Save Results to GeoPackage
-# Colab: "# Step 8: Download the Results"
-# (In Colab this also triggered a browser download; here we just save to disk)
+# STEP 1.7 — Save Results to GeoPackage
 # =============================================================================
 print("\n" + "=" * 60)
 print("STEP 8 — Saving enriched polygon file")
