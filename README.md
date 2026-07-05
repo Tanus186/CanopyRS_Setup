@@ -285,6 +285,16 @@ pip install torch==2.7.1 torchvision==0.22.1 --index-url https://download.pytorc
 
 ---
 
+NOTE:
+> If you follow this guide exactly in order, Step 5 will compile a "CPU-only" version of the AI (because the GPU tools aren't installed yet). Later, in Step 9, you will install the GPU tools (CUDA) and have to recompile the AI all over again, which takes an extra 30-40 minutes. 
+>
+> **To save time and only compile once, you can do this:**
+> 1. Jump ahead to **Step 9**, but **ONLY do steps 9.1 and 9.2** (Download and Install the CUDA Toolkit).
+> 2. Come right back here to **Step 5** and run the compilation. *(Add the command `set FORCE_CUDA=1` right before the `pip install` command to guarantee it uses the GPU).*
+> 3. Proceed normally to Step 6, 7, and 8 to download your models. (When you reach Step 9 later, you can just skip it since you already did it).
+>
+> If you are worried about messing up the order, **simply ignore this note and follow the guide exactly as written!** It will make the computer do the work twice, but it is 100% guaranteed to work perfectly in the end.
+
 ## Step 5: Compiling Detectron2 and Detrex
 
 This step compiles the core object detection libraries. You will see some test commands fail at first—this is expected, and the subsequent commands will fix them.
@@ -321,6 +331,8 @@ Here are the two steps with **Step 5** moved before **Step 4**:
 ---
 
 **4. The `_C` extension error fix:**  
+
+Note: Windows often fails to load the compiled C++ files (throwing a DLL load failed error) and gets confused by folder names. The following commands fix the system paths, install pefile to read the files, and move you out of the CanopyRS directory to prevent folder name conflicts.
 
 ```cmd
 python -c "from detectron2 import _C; print('detectron2 _C extension: OK')"
