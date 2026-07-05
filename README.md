@@ -4,6 +4,8 @@
 
 This documentation will guide you step by step through installing and configuring CanopyRS on a Windows High-Performance Computing (HPC) machine. You can run these commands in the Windows Command Prompt (`cmd`). 
 
+*(NOTE: All of this is done in cmd, but if you are going to set this up from scratch, it is advised to use Linux it will be easier and faster with fewer errors)*
+
 ## Project Directory Structure
 
 Before we begin, let's understand where all the files will go. We will assume you are working in a main directory called `D:\YourFolderName`. By the end of this setup, your folder structure will look like this:
